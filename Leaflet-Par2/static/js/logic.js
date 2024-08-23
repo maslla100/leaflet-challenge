@@ -26,10 +26,10 @@ function markerColor(depth) {
 }
 
 // Retrieve the earthquake GeoJSON data
-d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson").then(function (data) {
+d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson").then(function (earthquakeData) {
 
     // Create a GeoJSON layer containing the features array on the earthquakeData object
-    L.geoJSON(data, {
+    var earthquakes = L.geoJSON(earthquakeData, {
         // Create circle markers
         pointToLayer: function (feature, latlng) {
             return L.circleMarker(latlng, {
@@ -47,7 +47,33 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
                 `<h3>${feature.properties.place}</h3><hr><p>Magnitude: ${feature.properties.mag}</p><p>Depth: ${feature.geometry.coordinates[2]} km</p>`
             );
         }
-    }).addTo(map);
+    });
+
+    // Add the earthquake layer to the map
+    earthquakes.addTo(map);
+
+    // Retrieve the tectonic plates GeoJSON data
+    d3.json("https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json").then(function (tectonicData) {
+        // Create a GeoJSON layer for the tectonic plates
+        var tectonicPlates = L.geoJSON(tectonicData, {
+            color: "orange",
+            weight: 2
+        });
+
+        // Add the tectonic plates layer to the map
+        tectonicPlates.addTo(map);
+
+        // Create an overlay object to hold our overlays
+        var overlayMaps = {
+            "Earthquakes": earthquakes,
+            "Tectonic Plates": tectonicPlates
+        };
+
+        // Add layer control to the map
+        L.control.layers(null, overlayMaps, {
+            collapsed: false
+        }).addTo(map);
+    });
 
     // Set up the legend
     var legend = L.control({ position: "bottomright" });
