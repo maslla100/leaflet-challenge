@@ -88,7 +88,7 @@ To run this project locally, follow these steps:
 
 ## Deployment
 The project is deployed on GitHub Pages. You can view the live map here:
-- [Live Map](https://your-username.github.io/leaflet-earthquake-visualization/)
+- [Live Map](https://maslla100.github.io/leaflet-challenge/)
 
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
